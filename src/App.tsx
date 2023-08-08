@@ -1,6 +1,7 @@
+
 function App() {
   return (
-      <main className='h-screen bg-white flex items-center justify-center'>
+      <main className='h-screen flex items-center justify-center font-body'>
       </main>
   )
 }
