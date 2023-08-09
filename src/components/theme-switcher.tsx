@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { Theme, useTheme } from '../hooks/use-theme'
 
 export function ThemeSwitcher() {
-  const [theme, setTheme] = useTheme('light')
+  const [theme, setTheme] = useTheme()
 
   function handleValueChange(value: Theme) {
     if (value) setTheme(value)

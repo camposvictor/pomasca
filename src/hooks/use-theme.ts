@@ -5,7 +5,12 @@ export type Theme = 'light' | 'dark'
 
 type SetValue<T> = Dispatch<SetStateAction<T>>
 
-export function useTheme(initialValue: Theme): [Theme, SetValue<Theme>] {
+export function useTheme(): [Theme, SetValue<Theme>] {
+  const initialValue: Theme = window.matchMedia('(prefers-color-scheme: dark)')
+    .matches
+    ? 'dark'
+    : 'light'
+
   const [theme, setTheme] = useLocalStorage<Theme>('theme', initialValue)
 
   useEffect(() => {
