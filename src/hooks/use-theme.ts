@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
-import { useLocalStorage } from './use-local-storage'
+import { useLocalStorage } from 'usehooks-ts'
 
 export type Theme = 'light' | 'dark'
 
