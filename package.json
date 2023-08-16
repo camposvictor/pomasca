@@ -1,6 +1,6 @@
 {
-  "homepage": "https://camposvictor.github.io/pomasca",
-  "name": "pomodoro.masca",
+  "homepage":"https://camposvictor.github.io/pomasca/",
+  "name":"pomasca",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist"
+    "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",

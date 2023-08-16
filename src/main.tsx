@@ -12,11 +12,11 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/',
+        path: '/pomasca/',
         element: <Root />,
       },
       {
-        path: '/settings',
+        path: '/pomasca/settings/',
         element: <Settings />,
       },
     ],
