@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Header } from './header'
+import { Header } from '../components/header'
 import { Outlet, useLocation } from 'react-router-dom'
 
 export function Layout() {
@@ -11,9 +11,10 @@ export function Layout() {
         <div className="py-8">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ type: 'spring', duration: 0.5, bounce: 0.5 }}
           >
             <Outlet />
           </motion.div>

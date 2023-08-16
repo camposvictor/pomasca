@@ -4,7 +4,7 @@ import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Root } from './routes/root'
 import { Settings } from './routes/settings'
-import { Layout } from './components/layout'
+import { Layout } from './routes/layout'
 import { AnimatePresence } from 'framer-motion'
 
 const router = createBrowserRouter([
