@@ -8,7 +8,7 @@ export function Layout() {
     <main className="flex h-screen justify-center bg-white px-5 py-4 font-body dark:bg-gray-900">
       <div className="w-full max-w-lg">
         <Header />
-        <div className="py-8">
+        <div className="py-2">
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 40 }}
