@@ -18,7 +18,7 @@ function formatTime(seconds: number) {
 
 export function Countdown({ time }: CountdownProps) {
   return (
-    <span className="absolute block text-5xl font-bold text-gray-900 dark:text-gray-50">
+    <span className="absolute block text-4xl font-bold text-gray-900 dark:text-gray-50 sm:text-5xl">
       {formatTime(time)}
     </span>
   )
