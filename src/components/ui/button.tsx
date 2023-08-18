@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { tv, VariantProps } from 'tailwind-variants'
 
-const button = tv({
+export const button = tv({
   base: 'rounded-md font-medium transition inline-flex gap-2 items-center justify-center disabled:opacity-50 disabled:pointer-events-none ',
   variants: {
     variant: {
