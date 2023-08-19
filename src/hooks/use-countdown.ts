@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface CountdownParams {
   initialTime: number
@@ -23,26 +23,31 @@ export function useCountdown({
   const [time, setTime] = useState(initialTime)
   const [isRunning, setIsRunning] = useState(false)
 
+  const interval = useRef(setInterval(() => {}))
+
   useEffect(() => {
     setTime(initialTime)
     setIsRunning(false)
   }, [initialTime])
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>
     if (isRunning) {
-      interval = setInterval(() => {
+      interval.current = setInterval(() => {
         setTime((prevTime) => prevTime - 1)
       }, intervalMs)
     }
     if (!isRunning) {
-      clearInterval(interval)
+      clearInterval(interval.current)
     }
 
     return () => {
-      clearInterval(interval)
+      clearInterval(interval.current)
     }
   }, [isRunning, intervalMs])
+
+  useEffect(() => {
+    if (time === 0) clearInterval(interval.current)
+  }, [time, interval])
 
   const startCountdown = () => setIsRunning(true)
   const stopCountdown = () => setIsRunning(false)
