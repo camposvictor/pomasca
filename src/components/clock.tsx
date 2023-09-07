@@ -1,23 +1,24 @@
+import { usePomoStore } from '@/stores/pomo'
 import { animate, motion, useMotionValue } from 'framer-motion'
 import { useEffect } from 'react'
 
 interface ClockProps {
   strokeWidth: number
   currentTime: number
-  totalTime: number
 }
 
-export function Clock({ strokeWidth, totalTime, currentTime }: ClockProps) {
+export function Clock({ strokeWidth, currentTime }: ClockProps) {
+  const activeTime = usePomoStore((state) => state.activeTime)
   const pathLength = useMotionValue(1)
 
   useEffect(() => {
-    const progress = currentTime / totalTime
+    const progress = currentTime / activeTime
     animate(pathLength, progress, {
       type: 'spring',
       duration: 0.3,
       bounce: 0,
     })
-  }, [currentTime, pathLength, totalTime])
+  }, [currentTime, pathLength, activeTime])
   return (
     <motion.svg className="absolute h-full w-full">
       <motion.circle
