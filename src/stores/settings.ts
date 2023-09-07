@@ -13,9 +13,9 @@ interface SettingsStore {
 export const useSettingsStore = create<SettingsStore>()(
   persist(
     (set) => ({
-      pomoDuration: 25 * 60,
-      shortBreakDuration: 5 * 60,
-      longBreakDuration: 15 * 60,
+      pomoDuration: 25 * 60 * 1000,
+      shortBreakDuration: 5 * 60 * 1000,
+      longBreakDuration: 15 * 60 * 1000,
       setPomo: (newTime) =>
         set((state) => ({ ...state, pomoDuration: newTime })),
       setShortBreak: (newTime) =>
