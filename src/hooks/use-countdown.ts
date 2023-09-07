@@ -1,29 +1,33 @@
-import { useState, useEffect, useRef } from 'react'
+// useCountdown.js
+import { useState, useEffect, useMemo } from 'react'
 
-interface CountdownParams {
+type UseCountdownProps = {
   initialTime: number
-  intervalMs: number
+  interval: number
 }
 
-interface CountdownState {
+export type CountdownControllers = {
+  startCountdown: () => void
+  pauseCountdown: () => void
+  resetCountdown: () => void
+}
+
+export type CountdownHelpers = {
   time: number
   isRunning: boolean
 }
 
-interface CountdownHelpers {
-  startCountdown: () => void
-  stopCountdown: () => void
-  resetCountdown: () => void
-}
-
 export function useCountdown({
-  initialTime,
-  intervalMs,
-}: CountdownParams): CountdownState & CountdownHelpers {
+  initialTime = 25 * 60 * 1000,
+  interval = 1000,
+}: UseCountdownProps): CountdownControllers & CountdownHelpers {
   const [time, setTime] = useState(initialTime)
   const [isRunning, setIsRunning] = useState(false)
 
-  const interval = useRef(setInterval(() => {}))
+  const countdown: Worker = useMemo(
+    () => new Worker(new URL('@/workers/timer.ts', import.meta.url)),
+    [],
+  )
 
   useEffect(() => {
     setTime(initialTime)
@@ -31,36 +35,34 @@ export function useCountdown({
   }, [initialTime])
 
   useEffect(() => {
-    if (isRunning) {
-      interval.current = setInterval(() => {
-        setTime((prevTime) => prevTime - 1)
-      }, intervalMs)
-    }
-    if (!isRunning) {
-      clearInterval(interval.current)
+    if (window.Worker) {
+      countdown.onmessage = (e) => {
+        if (e.data.command === 'tick') {
+          setTime((prevTime) => prevTime - e.data.time)
+        }
+      }
     }
 
     return () => {
-      clearInterval(interval.current)
+      // countdown.terminate()
     }
-  }, [isRunning, intervalMs])
+  }, [])
 
-  useEffect(() => {
-    if (time === 0) clearInterval(interval.current)
-  }, [time, interval])
+  const startCountdown = () => {
+    countdown.postMessage({ command: 'start', interval })
+    setIsRunning(true)
+  }
 
-  const startCountdown = () => setIsRunning(true)
-  const stopCountdown = () => setIsRunning(false)
+  const pauseCountdown = () => {
+    countdown.postMessage({ command: 'pause' })
+    setIsRunning(false)
+  }
+
   const resetCountdown = () => {
+    countdown.postMessage({ command: 'reset' })
     setTime(initialTime)
     setIsRunning(false)
   }
 
-  return {
-    time,
-    isRunning,
-    startCountdown,
-    stopCountdown,
-    resetCountdown,
-  }
+  return { time, isRunning, startCountdown, pauseCountdown, resetCountdown }
 }
