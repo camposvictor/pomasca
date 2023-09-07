@@ -1,46 +1,41 @@
 import { Pause, Play, RotateCcw, SkipForward } from 'lucide-react'
-import { useCountdown } from '../hooks/use-countdown'
 import { Clock } from './clock'
 import { Countdown } from './countdown'
-import Sound from '../assets/alarm.wav'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { TimerButton } from './timer-button'
-import { usePomoStore } from '../stores/pomo'
-
-const alarm = new Audio(Sound)
+import * as Toast from './ui/toast'
+import { usePomo } from '@/hooks/use-pomo'
 
 export function Timer() {
-  const activeTime = usePomoStore((state) => state.activeTime)
-  const { time, isRunning, resetCountdown, startCountdown, stopCountdown } =
-    useCountdown({
-      initialTime: activeTime,
-      intervalMs: 1000,
-    })
+  const [showToast, setShowToast] = useState(false)
+  const {
+    time,
+    startCountdown,
+    resetCountdown,
+    pauseCountdown,
+    isRunning,
+    handleNextMode,
+    formattedTime,
+  } = usePomo()
+
+  const hasTimeEnded = time === 0
 
   useEffect(() => {
-    if (time === 0) alarm.play()
-  }, [time])
+    if (hasTimeEnded) setShowToast(true)
+  }, [hasTimeEnded])
 
   function handlePlayPause() {
-    if (isRunning) {
-      stopCountdown()
-      return
-    }
-    startCountdown()
-  }
-
-  function handleReset() {
-    resetCountdown()
+    isRunning ? pauseCountdown() : startCountdown()
   }
 
   return (
     <section className="my-8 flex flex-col items-center">
       <div className="relative z-20 flex aspect-square h-full w-2/3 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-        <Clock currentTime={time} totalTime={activeTime} strokeWidth={8} />
-        <Countdown time={time} />
+        <Clock currentTime={time} strokeWidth={8} />
+        <Countdown formattedTime={formattedTime} />
       </div>
       <div className="mt-5 flex items-center gap-4">
-        <TimerButton onClick={handleReset} variant="outline">
+        <TimerButton onClick={resetCountdown} variant="outline">
           <RotateCcw size={20} />
         </TimerButton>
         <TimerButton onClick={handlePlayPause} size="lg">
@@ -56,6 +51,21 @@ export function Timer() {
           <SkipForward size={20} />
         </TimerButton>
       </div>
+      <Toast.ToastProvider swipeDirection="right">
+        <Toast.Toast open={showToast} onOpenChange={setShowToast}>
+          <div className="grid gap-1">
+            <Toast.ToastTitle>O Tempo acabou</Toast.ToastTitle>
+            <Toast.ToastDescription>
+              Ir para a próxima etapa
+            </Toast.ToastDescription>
+          </div>
+          <Toast.ToastAction altText="pause alarm" onClick={handleNextMode}>
+            Next
+          </Toast.ToastAction>
+          <Toast.ToastClose />
+        </Toast.Toast>
+        <Toast.ToastViewport />
+      </Toast.ToastProvider>
     </section>
   )
 }
