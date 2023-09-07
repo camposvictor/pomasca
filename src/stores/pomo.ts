@@ -20,7 +20,7 @@ function getDuration(mode: Mode) {
 
 export const usePomoStore = create<PomoStore>()((set) => ({
   mode: 'pomo',
-  activeTime: 25 * 60,
+  activeTime: useSettingsStore.getState().pomoDuration,
   setMode: (newMode) => {
     const newTime = getDuration(newMode)
     set((state) => ({ ...state, mode: newMode, activeTime: newTime }))
